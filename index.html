@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Kingaspx - QR Code</title>
+    <link rel="stylesheet" href="files/style.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+
+</head>
+<body style="margin: 0;">
+<div id="root" class="noselect">
+    <div class="layout">
+        <img id="image"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATYAAACjCAMAAAA3vsLfAAAArlBMVEX////6+vr+/Pz87OL89PTl6NbM1c386Nqwwdf2l3eYlcv8//+istT19fH9lam4xNexvILt8OX4r3bO1eStuXz98Ov9i6Lh5eXh5+34sXupq9Kwu9WjtNLM07v64uH219L2kXH2oZP7nq6hnc7Ey6j66ur84c/3pmX5y6/5u4z3rob5wJb7sbj4xsi1tNayvIrf3sb71b33p4v1nYD6vK32tKH1zcP4s6r1w7T8v8m6ft0sAAACf0lEQVR4nO3aWXOiQBSGYRraRAWURVwTjdn3TGaf///H5jTQgxpHkytC+T5WCTRcdH11enFxHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAw7lu3T1oIldrcvuAMMwPWuQnVN17hNHg1BxtbNrzyG2/eFDkVsYmqXm67j41QPgSRYPYxuZKalTbe1xGUXRpY8sktazuHjVCLLFFbrmSUmz7Xb1em4i+DAaRKldQO7PpjPD+5yZJbm4lntbLqW3KMpNadixq7NjndpdMJsnk7bppQjv2auhQM+h7k9vDZrOXx8YgXaHWrvRdkiT3Om9X9pab11qRmlp//mBtxjC/fXjdbM+8jA3vOhOPKmtIKd/3Hcc31+ZlbhS3ipbq8YOvOVUMPBOL71/N57q6Ls/yg6tDvf74YbNzmBwXXzudzrfv2rbb2nKUG7cM7djGN2P70JSDT96zs45x9qNqt7EVqbVaqykftpVqWxa5/fTL6yq2sEgtptqsKhxHX/9aLn9nvg2rik2FWdyKQ1cxt5VWl0azkPqOXUBXApU3+WhfZslKus2Wz+xKK4blTvPH4fB8Y2+rjgQ/x+zwNOz1eltjOxrV06MmWJjUhk+bzSNy28mk1lvIyfhfwSnz61+Y51Zfvz65x975HwlMT7tT29Rvp+aL3hHVttdzt3she43ZTJnY2v26+9MMabdrqi0NgjSPrU2dvcdUYpPAZkEwk1lOYuuz+dhvfCHFJsPzJAhOZFYz5cZWd7+xzGxjx8bmhJLbuO4+NYA7e87/ctQPgnwxCNO03g41S7Ek4IPcPksBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADTeX0vjGCUN/+EfAAAAAElFTkSuQmCC"
+             draggable="false" alt="qr-code">
+
+        <form>
+            <p id="title">
+                Digite o nome da sessão
+            </p>
+
+            <label for="session" id="description">
+                Para iniciar a sessão, você deve digitar o nome<br/>e aguardar alguns segundos...
+            </label>
+            <input type="text" name="session" id="session" autocomplete="off">
+            <button type="button" id="send-btn" onclick="alterSession(document.getElementById('session').value)">
+                Enviar
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    async function getSession(session) {
+        let params = new FormData()
+        params.append('sessionName', session)
+        await axios.post('http://localhost:21465/iniciar-sessao', params)
+    }
+
+    async function alterSession(session) {
+        if (!session) {
+            alert("Digite o nome da sessão antes de continuar...")
+        } else {
+            document.getElementById('send-btn').disabled = true
+            await getSession(session)
+            document.getElementById('image').src = 'files/' + session + '.png'
+        }
+    }
+
+</script>
+
+<script>
+    const socket = io('http://localhost:21465/');
+
+    socket.on('whatsapp-started', (status) => {
+        console.log(status)
+    })
+
+    socket.on('qrCode', (qrCode) => {
+        let session = document.getElementById('session').value
+        if (session === qrCode.session) {
+            //recebe o QRCode do Socket.io e joga a imagem (base64) pra dentro do src.
+            //esse envio e recebimento pode ser customizado.
+            document.getElementById('image').src = qrCode.data
+        }
+    })
+
+    socket.on('whatsapp-status', (status) => {
+        if (status) {
+            alert('Whatsapp Aberto com sucesso')
+            document.getElementById('send-btn').disabled = false
+        } else {
+            alert('Whatsapp fechado com sucesso')
+        }
+    })
+
+    socket.on('mensagem-recebida', (message) => {
+        let session = document.getElementById('session').value
+        if (session === message.session) {
+            console.log(`[${message.session}]: Mensagem Recebida: \nTelefone: ' ${message.data.from}, Mensagem: ${message.data.body}`)
+        }
+    })
+</script>
+</body>
+</html>
