@@ -82,14 +82,6 @@
             "type": "string",
             "required": true,
             "default": "application/json"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
           }
         ],
         "responses": {
@@ -154,19 +146,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "path": {
-                  "type": "string",
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {
