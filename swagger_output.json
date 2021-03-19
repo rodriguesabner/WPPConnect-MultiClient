@@ -1,0 +1,607 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "WPPConnect API Server",
+    "description": "O WPPConnect API Server é para quem precisa de uma API pronta e rápida para integrar fácilmente em seu servidor.",
+    "contact": {}
+  },
+  "host": "localhost:21465",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Automação WhatsApp"
+    },
+    {
+      "name": "Bot"
+    },
+    {
+      "name": "WhatsApp"
+    },
+    {
+      "name": "WPPConnect"
+    },
+    {
+      "name": "WPPConnect Server"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/{session}/show-all-sessions": {
+      "get": {
+        "tags": [],
+        "description": "Mostrar todas as sessões cadastradas.",
+        "parameters": [
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "operationId": "12",
+        "summary": "Show All Sessions"
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "session",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/{session}/check-connection": {
+      "get": {
+        "tags": [],
+        "description": "Checa se a sessão informada está ativa ou não.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Content-Type",
+            "type": "string",
+            "required": true,
+            "default": "application/json"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "1",
+        "summary": "Check Connection"
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "name": "session",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/{session}/start-session": {
+      "post": {
+        "tags": [],
+        "description": "Inicia uma sessão no WhatsApp.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "2",
+        "summary": "Start Session"
+      },
+      "parameters": []
+    },
+    "/{session}/close-session": {
+      "post": {
+        "tags": [],
+        "description": "Fecha uma sessão no WhatsApp.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "3",
+        "summary": "Close Session"
+      }
+    },
+    "/{session}/send-message": {
+      "post": {
+        "tags": [],
+        "description": "Envia uma mensagem de texto para um número de telefone. ",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phone": {
+                  "type": "string",
+                  "example": "5511912345678"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Hello World"
+                },
+                "isGroup": {
+                  "type": "boolean",
+                  "example": false,
+                  "description": "Este parâmetro não é obrigatório. Se for verdadeiro, será incluido um @g.us no final do número de contato. Se for false @c.us"
+                }
+              },
+              "required": [
+                "phone",
+                "message"
+              ]
+            },
+            "x-examples": {},
+            "description": ""
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "operationId": "4",
+        "summary": "Send Message"
+      }
+    },
+    "/{session}/send-image": {
+      "post": {
+        "tags": [],
+        "description": "Envia uma imagem para um número de telefone.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phone": {
+                  "type": "string",
+                  "example": "5511912345678"
+                },
+                "caption": {
+                  "type": "string",
+                  "example": "This is a caption"
+                },
+                "path": {
+                  "type": "string",
+                  "example": "path/file/image.json"
+                },
+                "isGroup": {
+                  "example": false,
+                  "type": "boolean",
+                  "description": "Este parâmetro não é obrigatório. Se for verdadeiro, será incluido um @g.us no final do número de contato. Se for false @c.us"
+                }
+              },
+              "required": [
+                "phone",
+                "path"
+              ]
+            },
+            "description": "",
+            "x-examples": {}
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "5",
+        "summary": "Send Image"
+      }
+    },
+    "/{session}/send-file": {
+      "post": {
+        "tags": [],
+        "description": "Envia um arquivo para um número de telefone.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "phone": {
+                  "type": "string",
+                  "example": "5511912345678"
+                },
+                "path": {
+                  "type": "string",
+                  "example": "path/file/image.json"
+                },
+                "isGroup": {
+                  "example": false,
+                  "description": "Este parâmetro não é obrigatório. Se for verdadeiro, será incluido um @g.us no final do número de contato. Se for false @c.us",
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "phone",
+                "path"
+              ]
+            },
+            "description": ""
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "description": "application/json",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "6",
+        "summary": "Send File"
+      }
+    },
+    "/{session}/create-group": {
+      "post": {
+        "tags": [],
+        "description": "Cria um grupo no WhatsApp.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "groupname": {
+                  "type": "string",
+                  "example": "This is My Group",
+                  "default": "groupname"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "5511912345678",
+                  "description": "Número de telefone que será incluído no grupo. Se mais de um, poderá ser separado por vírgula.",
+                  "default": "groupname"
+                }
+              },
+              "required": [
+                "groupname",
+                "phone"
+              ]
+            },
+            "description": ""
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "7",
+        "summary": "Create Group"
+      }
+    },
+    "/{session}/join-code": {
+      "post": {
+        "tags": [],
+        "description": "Entra em um grupo de WhatsApp através do código de convite.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "inviteCode": {
+                  "type": "string",
+                  "default": "inviteCode"
+                }
+              }
+            },
+            "description": ""
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "8",
+        "summary": "Join Group by Code"
+      }
+    },
+    "/{session}/change-username": {
+      "post": {
+        "tags": [],
+        "description": "Altera o nome de usuário do perfil do WhatsApp.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "My New Name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "9",
+        "summary": "Change Username"
+      }
+    },
+    "/{session}/change-profile-image": {
+      "post": {
+        "tags": [],
+        "description": "Altera o nome de usuário do perfil do WhatsApp.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "description": "",
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "path"
+              ]
+            },
+            "description": "",
+            "x-examples": {}
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "default": "application-json",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "10",
+        "summary": "Change Profile Image"
+      }
+    },
+    "/{session}/show-all-contacts": {
+      "get": {
+        "tags": [],
+        "description": "Mostra todos os contatos de acordo com a sessão.",
+        "parameters": [
+          {
+            "name": "session",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "type": "string",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "default": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "operationId": "11",
+        "summary": "Show All Contacts"
+      }
+    }
+  },
+  "definitions": {},
+  "securityDefinitions": {}
+}
