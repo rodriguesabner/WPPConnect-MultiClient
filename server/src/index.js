@@ -1,8 +1,8 @@
 'use strict';
+require('dotenv').config()
 const cors = require('cors');
 const express = require('express');
 const app = express();
-const path = require('path')
 
 const options = {
     cors: true,
@@ -14,6 +14,7 @@ const io = require('socket.io')(server, options);
 const PORT = 21465;
 
 app.use(cors());
+app.use(express.json())
 
 app.use((req, res, next) => {
     req.io = io;
